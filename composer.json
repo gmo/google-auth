@@ -1,0 +1,29 @@
+{
+	"name": "gmo/google-auth",
+	"description": "A library for managing Authorization and Authentication using Google services",
+	"require": {
+		"psr/log": "1.0.0",
+		"gmo/common": "~1.6",
+		"gmo/cache": "~1.1",
+		"google/apiclient": "~1.1",
+		"firebase/php-jwt": "~1.0"
+	},
+	"require-dev": {
+		"gmo/dependency-injection": "~1.0",
+		"phpunit/phpunit": "3.7.*"
+	},
+	"suggest": {
+		"gmo/dependency-injection": "Provides a service provider for dependency injection"
+	},
+	"autoload": {
+		"psr-4": {
+			"GMO\\GoogleAuth\\": "src/"
+		}
+	},
+	"bin": [
+		"cli/cron.sh"
+	],
+	"repositories": [
+		{ "type": "composer", "url": "composer.gmodev.com" }
+	]
+}
