@@ -12,6 +12,7 @@ class Cookie implements SessionInterface {
 	 * @param string|null $cookieDomain
 	 */
 	public function __construct($cookieName, $secret, $cookieDomain = null) {
+		$this->cookieName = $cookieName;
 		$this->secret = $secret;
 		$this->cookieDomain = $cookieDomain;
 		$this->rawCookie = Collection::get($_COOKIE, $cookieName, '');
