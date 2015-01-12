@@ -6,6 +6,7 @@ use GMO\GoogleAuth\Exception;
 use Google_Client;
 use Google_Config;
 use Google_Auth_AssertionCredentials;
+use Google_Auth_Exception;
 
 class Authentication {
 	public function __construct(SessionInterface $session, $clientId, $clientSecret, $redirectUri) {
@@ -25,6 +26,12 @@ class Authentication {
 		if($this->isUserLoggedIn()) {
 			$this->userClient->setAccessToken($this->getAccessTokenFromSession());
 		}
+
+		try {
+			$this->userClient->verifyIdToken();
+		} catch(Google_Auth_Exception $e) {
+			$this->session->set(static::USER_ACCESS_TOKEN_SESSION_KEY, null);
+		}
 	}
 
 	public function getLoginUrl() {
@@ -41,7 +48,6 @@ class Authentication {
 		}
 
 		$userAttributes = $this->userClient->verifyIdToken()->getAttributes();
-
 		return new User($userAttributes);
 	}
 
