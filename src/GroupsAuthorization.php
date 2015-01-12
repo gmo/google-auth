@@ -3,6 +3,7 @@ namespace GMO\GoogleAuth;
 
 use Google_Client;
 use Google_Service_Directory;
+use Google_Service_Directory_Group;
 
 class GroupsAuthorization {
 	public function __construct(Authentication $authentication, $domain, array $groupEmailAddresses = array()) {
@@ -22,43 +23,55 @@ class GroupsAuthorization {
 		return $this->groupEmailAddresses;
 	}
 
-	public function isUserInAnyGroup(User $user) {
-
-	}
-
-	public function isUserInGroup(User $user, Group $group) {
-
-	}
-
 	public function setGroupEmailAddresses(array $groupEmailAddresses) {
 		$this->groupEmailAddresses = $groupEmailAddresses;
+	}
 
-		if(!empty($this->groupEmailAddresses)) {
-			$this->buildGroupFromGroupEmailAddresses();
-		}
+	public function isUserInAnyGroup(User $user) {
+		return $this->isUserInAnyGroupInGroupArray($user, $this->groupEmailAddresses);
+	}
+
+	public function isUserInGroup(User $user, $group) {
+		return $this->isUserInAnyGroupInGroupArray($user, array($group));
 	}
 
 	public function getAllGroupsSummary() {
-		// Calls "Retrieve all groups for a domain or the account"
-		$groups = $this->service->groups->listGroups(array(
+		return $this->service->groups->listGroups(array(
 			'domain' => $this->domain
 		));
-		//$groups = $this->service->groups->get('devops@gmomail.org');
-		var_dump($groups);
 	}
 
-	public function getGroupsForUser($userKey) {
-		$this->getAllGroupsSummary();
-		return $this->service->groups->listGroups(array(
-			'userKey' => $userKey,
-			'domain' => $this->domain,
-		));
+	public function getGroupsEmailAddressesForUser($userKey) {
+		$groupEmails = array();
+		$pageToken = null;
+
+		do {
+			$params = array(
+				'userKey' => $userKey,
+				'domain' => $this->domain,
+			);
+			if(!empty($pageToken)) {
+				$params['pageToken'] = $pageToken;
+			}
+			$results = $this->service->groups->listGroups($params);
+
+			$pageGroupEmails = array_map(function(Google_Service_Directory_Group $group) {
+				return $group->getEmail();
+			}, $results->getGroups());
+
+			$groupEmails = array_merge($groupEmails, $pageGroupEmails);
+			$pageToken = $results->getNextPageToken();
+		} while(!empty($pageToken));
+
+		return $groupEmails;
 	}
 
-	protected function buildGroupFromGroupEmailAddresses() {
-		//$this->service->groups->get();
-
+	protected function isUserInAnyGroupInGroupArray(User $user, array $groupEmailAddresses) {
+		$userGroups = $this->getGroupsEmailAddressesForUser($user->getEmail());
+		$commonGroups = array_intersect($userGroups, $groupEmailAddresses);
+		return !empty($commonGroups);
 	}
+
 
 	protected $authentication;
 	protected $groupEmailAddresses;
@@ -67,5 +80,6 @@ class GroupsAuthorization {
 	/** @var \Google_Service_Directory */
 	protected $service;
 
-	const READ_GROUP_SCOPE = 'https://www.googleapis.com/auth/admin.directory.group.readonly';
+	const USER_SCOPE = 'https://www.googleapis.com/auth/admin.directory.user';
+	const GROUP_SCOPE = 'https://www.googleapis.com/auth/admin.directory.group';
 }

@@ -51,12 +51,16 @@ class Authentication {
 		return new User($userAttributes);
 	}
 
-	public function setServiceAccount($clientEmail, $privateKeyPath) {
+	public function setServiceAccount($clientEmail, $privateKeyPath, $adminUser) {
 		$credentials = new Google_Auth_AssertionCredentials(
 			$clientEmail,
-			array(GroupsAuthorization::READ_GROUP_SCOPE),
+			array(
+				GroupsAuthorization::GROUP_SCOPE,
+				GroupsAuthorization::USER_SCOPE
+			),
 			file_get_contents($privateKeyPath)
 		);
+		$credentials->sub = $adminUser;
 
 		$this->serviceClient = new Google_Client();
 		$this->serviceClient->setAssertionCredentials($credentials);
