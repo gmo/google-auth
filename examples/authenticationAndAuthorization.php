@@ -38,12 +38,10 @@ $authentication->setServiceAccount(
 	$config['serviceAccount']['adminUser']
 );
 $groupsAuthorization = new GroupsAuthorization(
-	$authentication,
-	$config['serviceAccount']['domain'],
-	$config['authorizationGroups']
+	$authentication, $config['serviceAccount']['domain']
 );
 
-if(!$groupsAuthorization->isUserInAnyGroup($user)) {
+if(!$groupsAuthorization->isUserInAnyGroup($user, $config['authorizationGroups'])) {
 	echo '<a href="'.$authentication->getLoginUrl().'">Login</a>';
 	exit();
 }

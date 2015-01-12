@@ -11,10 +11,9 @@ class GroupsAuthorization {
 	 * Constructor.
 	 * @param Authentication $authentication
 	 * @param string $domain The Google Apps domain to check for groups in
-	 * @param array $groupEmailAddresses
 	 * @throws Exception\ServiceAccountMissing
 	 */
-	public function __construct(Authentication $authentication, $domain, array $groupEmailAddresses = array()) {
+	public function __construct(Authentication $authentication, $domain) {
 		$this->authentication = $authentication;
 		$this->domain = $domain;
 
@@ -23,33 +22,6 @@ class GroupsAuthorization {
 		}
 
 		$this->service = new Google_Service_Directory($this->authentication->getServiceClient());
-
-		$this->setGroupEmailAddresses($groupEmailAddresses);
-	}
-
-	/**
-	 * Gets the Group Email addresses to authenticate users against
-	 * @return string[]
-	 */
-	public function getGroupEmailAddresses() {
-		return $this->groupEmailAddresses;
-	}
-
-	/**
-	 * Sets the Group Email addresses to authenticate users against
-	 * @param string[] $groupEmailAddresses
-	 */
-	public function setGroupEmailAddresses(array $groupEmailAddresses) {
-		$this->groupEmailAddresses = $groupEmailAddresses;
-	}
-
-	/**
-	 * Checks if a provided User is in any of the groups
-	 * @param User $user
-	 * @return bool
-	 */
-	public function isUserInAnyGroup(User $user) {
-		return $this->isUserInAnyProvidedGroup($user, $this->groupEmailAddresses);
 	}
 
 	/**
@@ -58,18 +30,18 @@ class GroupsAuthorization {
 	 * @param string $group
 	 * @return bool
 	 */
-	public function isUserInProvidedGroup(User $user, $group) {
-		return $this->isUserInAnyProvidedGroup($user, array($group));
+	public function isUserInGroup(User $user, $group) {
+		return $this->isUserInAnyGroup($user, array($group));
 	}
 
 	/**
 	 * Checks if a provided user is in any of a set of specific groups
 	 * @param User $user
-	 * @param array $groupEmailAddresses
+	 * @param string[] $groupEmailAddresses
 	 * @return bool
 	 */
-	public function isUserInAnyProvidedGroup(User $user, array $groupEmailAddresses) {
-		$userGroups = $this->getGroupsEmailAddressesForUser($user->getEmail());
+	public function isUserInAnyGroup(User $user, array $groupEmailAddresses) {
+		$userGroups = $this->getGroupsForUser($user);
 		$commonGroups = array_intersect($userGroups, $groupEmailAddresses);
 		return !empty($commonGroups);
 	}
@@ -77,11 +49,11 @@ class GroupsAuthorization {
 	/**
 	 * Checks if a provided user is in all of a set of specific groups
 	 * @param User $user
-	 * @param array $groupEmailAddresses
+	 * @param string[] $groupEmailAddresses
 	 * @return bool
 	 */
-	public function isUserInAllProvidedGroups(User $user, array $groupEmailAddresses) {
-		$userGroups = $this->getGroupsEmailAddressesForUser($user->getEmail());
+	public function isUserInAllGroups(User $user, array $groupEmailAddresses) {
+		$userGroups = $this->getGroupsForUser($user);
 		$commonGroups = array_intersect($userGroups, $groupEmailAddresses);
 		return count($groupEmailAddresses) === count($commonGroups);
 	}
@@ -98,10 +70,11 @@ class GroupsAuthorization {
 
 	/**
 	 * Gets an array of all the groups that the provided user is a member of
-	 * @param string $userKey
+	 * @param User $user
 	 * @return string[]
 	 */
-	public function getGroupsEmailAddressesForUser($userKey) {
+	public function getGroupsForUser(User $user) {
+		$userKey = $user->getEmail();
 		$groupEmails = array();
 		$pageToken = null;
 
