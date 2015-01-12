@@ -21,6 +21,10 @@ $authentication = new Authentication(
 	$config['oAuth']['redirectUri']
 );
 
+if(isset($_REQUEST['logout'])) {
+	$authentication->logout();
+}
+
 if(!$authentication->isUserLoggedIn()) {
 	echo '<a href="'.$authentication->getLoginUrl().'">Login</a>';
 	exit();
@@ -44,7 +48,8 @@ if(!$groupsAuthorization->isUserInAnyGroup($user)) {
 	exit();
 }
 
-echo "You are logged-in as " . $user->getEmail();
+echo "You are logged-in as " . $user->getEmail()
+	. "<br /><a href=\"examples/authenticationAndAuthorization.php?logout\">Logout</a>";
 
 
 

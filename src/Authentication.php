@@ -35,6 +35,14 @@ class Authentication {
 		return $this->getAccessTokenFromSession() ? true : false;
 	}
 
+	public function logout() {
+		if(!$this->isUserLoggedIn()) {
+			return;
+		}
+
+		$this->session->remove(static::USER_ACCESS_TOKEN_SESSION_KEY);
+	}
+
 	public function getUser() {
 		if(!$this->isUserLoggedIn()) {
 			throw new Exception\UserNotLoggedIn();

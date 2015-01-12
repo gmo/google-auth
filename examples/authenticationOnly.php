@@ -20,6 +20,10 @@ $authentication = new Authentication(
 	$config['oAuth']['redirectUri']
 );
 
+if(isset($_REQUEST['logout'])) {
+	$authentication->logout();
+}
+
 if(!$authentication->isUserLoggedIn()) {
 	echo '<a href="'.$authentication->getLoginUrl().'">Login</a>';
 	exit();
@@ -27,7 +31,7 @@ if(!$authentication->isUserLoggedIn()) {
 
 $user = $authentication->getUser();
 
-echo "You are logged-in as " . $user->getEmail();
-
+echo "You are logged-in as " . $user->getEmail()
+	. "<br /><a href=\"examples/authenticationOnly.php?logout\">Logout</a>";
 
 
