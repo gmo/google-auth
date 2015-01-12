@@ -32,13 +32,11 @@ if(!$authentication->isUserLoggedIn()) {
 
 $user = $authentication->getUser();
 
-$authentication->setServiceAccount(
+$groupsAuthorization = new GroupsAuthorization(
 	$config['serviceAccount']['clientEmail'],
 	$config['serviceAccount']['privateKeyPath'],
-	$config['serviceAccount']['adminUser']
-);
-$groupsAuthorization = new GroupsAuthorization(
-	$authentication, $config['serviceAccount']['domain']
+	$config['serviceAccount']['adminUser'],
+	$config['serviceAccount']['domain']
 );
 
 if(!$groupsAuthorization->isUserInAnyGroup($user, $config['authorizationGroups'])) {
