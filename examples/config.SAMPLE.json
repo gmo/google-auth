@@ -1,0 +1,21 @@
+{
+	"jwt": {
+		"cookieName": "foo",
+		"secret": "bar"
+	},
+	"oAuth": {
+		"clientId": "something.apps.googleusercontent.com",
+		"clientSecret": "SECRET",
+		"redirectUri": "http://localhost/google-auth/examples/authenticationOnly.php"
+	},
+	"serviceAccount": {
+		"clientEmail": "something@developer.gserviceaccount.com",
+		"privateKeyPath": "path/to/file.p12",
+		"domain": "example.com",
+		"adminUser": "admin@example.com"
+	},
+	"authorizationGroups": [
+		"administrators@example.com",
+		"reports@example.com"
+	]
+}
