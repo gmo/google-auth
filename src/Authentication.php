@@ -5,7 +5,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use GMO\GoogleAuth\Exception;
 use Google_Client;
 use Google_Config;
-use Google_Auth_AssertionCredentials;
 use Google_Auth_Exception;
 
 class Authentication {
@@ -77,43 +76,11 @@ class Authentication {
 	}
 
 	/**
-	 * Sets the service account for use with Google account-wide APIs
-	 * @param string $clientEmail
-	 * @param string $privateKeyPath A path to the private key to authenticate the service account with
-	 * @param string $adminUser The admin user to impersonate during API calls
-	 */
-	public function setServiceAccount($clientEmail, $privateKeyPath, $adminUser) {
-		$credentials = new Google_Auth_AssertionCredentials(
-			$clientEmail,
-			array(
-				GroupsAuthorization::GROUP_SCOPE,
-				GroupsAuthorization::USER_SCOPE
-			),
-			file_get_contents($privateKeyPath)
-		);
-		$credentials->sub = $adminUser;
-
-		$this->serviceClient = new Google_Client();
-		$this->serviceClient->setAssertionCredentials($credentials);
-		if ($this->serviceClient->getAuth()->isAccessTokenExpired()) {
-			$this->serviceClient->getAuth()->refreshTokenWithAssertion();
-		}
-	}
-
-	/**
 	 * Gets the Google client that uses OAuth2 for API calls
 	 * @return Google_Client
 	 */
 	public function getUserClient() {
 		return $this->userClient;
-	}
-
-	/**
-	 * Gets the Google client that uses a Service Account for API Calls
-	 * @return Google_Client
-	 */
-	public function getServiceClient() {
-		return $this->serviceClient;
 	}
 
 	/**
@@ -167,9 +134,6 @@ class Authentication {
 
 	/** @var \Google_Client */
 	protected $userClient;
-
-	/** @var \Google_Client */
-	protected $serviceClient;
 
 	const EMAIL_SCOPE = 'email';
 	const USER_ACCESS_TOKEN_SESSION_KEY = 'userAccessToken';

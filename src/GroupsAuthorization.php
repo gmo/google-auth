@@ -4,24 +4,21 @@ namespace GMO\GoogleAuth;
 use Google_Client;
 use Google_Service_Directory;
 use Google_Service_Directory_Group;
+use Google_Auth_AssertionCredentials;
 
 class GroupsAuthorization {
 
 	/**
 	 * Constructor.
-	 * @param Authentication $authentication
+	 * @param string $clientEmail
+	 * @param string $privateKeyPath A path to the private key to authenticate the service account with
+	 * @param string $adminUser The admin user to impersonate during API calls
 	 * @param string $domain The Google Apps domain to check for groups in
-	 * @throws Exception\ServiceAccountMissing
 	 */
-	public function __construct(Authentication $authentication, $domain) {
-		$this->authentication = $authentication;
+	public function __construct($clientEmail, $privateKeyPath, $adminUser, $domain) {
+		$serviceClient = $this->createServiceClient($clientEmail, $privateKeyPath, $adminUser);
 		$this->domain = $domain;
-
-		if(!$this->authentication->getServiceClient() instanceof Google_Client) {
-			throw new Exception\ServiceAccountMissing();
-		}
-
-		$this->service = new Google_Service_Directory($this->authentication->getServiceClient());
+		$this->service = new Google_Service_Directory($serviceClient);
 	}
 
 	/**
@@ -99,7 +96,33 @@ class GroupsAuthorization {
 		return $groupEmails;
 	}
 
-	protected $authentication;
+	/**
+	 * Creates a Google_Client configured with a service account
+	 * @param string $clientEmail
+	 * @param string $privateKeyPath A path to the private key to authenticate the service account with
+	 * @param string $adminUser The admin user to impersonate during API calls
+	 * @return Google_Client
+	 */
+	protected function createServiceClient($clientEmail, $privateKeyPath, $adminUser) {
+		$credentials = new Google_Auth_AssertionCredentials(
+			$clientEmail,
+			array(
+				GroupsAuthorization::GROUP_SCOPE,
+				GroupsAuthorization::USER_SCOPE
+			),
+			file_get_contents($privateKeyPath)
+		);
+		$credentials->sub = $adminUser;
+
+		$serviceClient = new Google_Client();
+		$serviceClient->setAssertionCredentials($credentials);
+		if ($serviceClient->getAuth()->isAccessTokenExpired()) {
+			$serviceClient->getAuth()->refreshTokenWithAssertion();
+		}
+
+		return $serviceClient;
+	}
+
 	protected $groupEmailAddresses;
 	protected $domain;
 
