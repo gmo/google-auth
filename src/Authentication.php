@@ -172,6 +172,5 @@ class Authentication {
 	protected $serviceClient;
 
 	const EMAIL_SCOPE = 'email';
-	const USER_SETTINGS_SESSION_KEY = 'userSettings';
 	const USER_ACCESS_TOKEN_SESSION_KEY = 'userAccessToken';
 }
