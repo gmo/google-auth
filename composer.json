@@ -6,7 +6,8 @@
 		"gmo/common": "~1.6",
 		"gmo/cache": "~1.1",
 		"google/apiclient": "~1.1",
-		"firebase/php-jwt": "~1.0"
+		"firebase/php-jwt": "~1.0",
+		"symfony/http-foundation": "~2.6"
 	},
 	"require-dev": {
 		"gmo/dependency-injection": "~1.0",
@@ -20,9 +21,6 @@
 			"GMO\\GoogleAuth\\": "src/"
 		}
 	},
-	"bin": [
-		"cli/cron.sh"
-	],
 	"repositories": [
 		{ "type": "composer", "url": "composer.gmodev.com" }
 	]

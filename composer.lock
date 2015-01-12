@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "26acb9dfd2458aaa34570823cd173051",
+    "hash": "8691491a300143140748e177233356bf",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -84,17 +84,17 @@
         },
         {
             "name": "gmo/common",
-            "version": "v1.24.8",
+            "version": "v1.24.9",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:gmodev/common-library.git",
-                "reference": "2e6790e66e772665c962e593bdf1480822e8a933"
+                "reference": "3ac279d7c7cca8fe67ce89f26d1618cc91477989"
             },
             "dist": {
                 "type": "zip",
-                "url": "http://composer.gmodev.com/dist/gmo-common-v1.24.8-858764.zip",
-                "reference": "2e6790e66e772665c962e593bdf1480822e8a933",
-                "shasum": "12635bd802ad17478773849e25151db0af1ebe9b"
+                "url": "http://composer.gmodev.com/dist/gmo-common-v1.24.9-7bc4ac.zip",
+                "reference": "3ac279d7c7cca8fe67ce89f26d1618cc91477989",
+                "shasum": "40be9ab92288fe33d068093513108cefb31b1c14"
             },
             "require": {
                 "symfony/yaml": "~2.5"
@@ -113,6 +113,11 @@
                 "twig/twig": "Provides twig responses"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "GMO\\Common\\": "src/",
@@ -120,7 +125,7 @@
                 }
             },
             "description": "A library for common code",
-            "time": "2014-12-23 18:18:26"
+            "time": "2015-01-09 22:47:42"
         },
         {
             "name": "google/apiclient",
@@ -251,6 +256,59 @@
                 "psr-3"
             ],
             "time": "2012-12-21 11:40:51"
+        },
+        {
+            "name": "symfony/http-foundation",
+            "version": "v2.6.3",
+            "target-dir": "Symfony/Component/HttpFoundation",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/HttpFoundation.git",
+                "reference": "3f4ba2c658be910fe6cec46ed34ee900bd18bb01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/3f4ba2c658be910fe6cec46ed34ee900bd18bb01",
+                "reference": "3f4ba2c658be910fe6cec46ed34ee900bd18bb01",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/expression-language": "~2.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\HttpFoundation\\": ""
+                },
+                "classmap": [
+                    "Symfony/Component/HttpFoundation/Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony HttpFoundation Component",
+            "homepage": "http://symfony.com",
+            "time": "2015-01-05 17:41:06"
         },
         {
             "name": "symfony/yaml",

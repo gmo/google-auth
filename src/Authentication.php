@@ -1,7 +1,7 @@
 <?php
 namespace GMO\GoogleAuth;
 
-use GMO\GoogleAuth\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use GMO\GoogleAuth\Exception;
 use Google_Client;
 use Google_Config;
@@ -9,8 +9,11 @@ use Google_Auth_AssertionCredentials;
 use Google_Auth_Exception;
 
 class Authentication {
-	public function __construct(SessionInterface $session, $clientId, $clientSecret, $redirectUri) {
+	public function __construct(Session $session, $clientId, $clientSecret, $redirectUri) {
 		$this->session = $session;
+		if(!$this->session->isStarted()) {
+			$this->session->start();
+		}
 
 		$config = new Google_Config();
 		$config->setClientId($clientId);
@@ -19,19 +22,9 @@ class Authentication {
 
 		$this->userClient = new Google_Client($config);
 		$this->userClient->setScopes(static::EMAIL_SCOPE);
-		// TODO: Add relevant scopes here with $this->googleClient->addScope()
 
 		$this->checkForUserLoginAttempt();
-
-		if($this->isUserLoggedIn()) {
-			$this->userClient->setAccessToken($this->getAccessTokenFromSession());
-		}
-
-		try {
-			$this->userClient->verifyIdToken();
-		} catch(Google_Auth_Exception $e) {
-			$this->session->set(static::USER_ACCESS_TOKEN_SESSION_KEY, null);
-		}
+		$this->setAccessTokenIfUserIsLoggedIn();
 	}
 
 	public function getLoginUrl() {
@@ -99,7 +92,20 @@ class Authentication {
 		$this->session->set(static::USER_ACCESS_TOKEN_SESSION_KEY, $this->userClient->getAccessToken());
 	}
 
-	/** @var SessionInterface */
+	protected function setAccessTokenIfUserIsLoggedIn() {
+		if(!$this->isUserLoggedIn()) {
+			return;
+		}
+
+		$this->userClient->setAccessToken($this->getAccessTokenFromSession());
+		try {
+			$this->userClient->verifyIdToken();
+		} catch(Google_Auth_Exception $e) {
+			$this->session->set(static::USER_ACCESS_TOKEN_SESSION_KEY, null);
+		}
+	}
+
+	/** @var Session */
 	protected $session;
 
 	/** @var \Google_Client */
