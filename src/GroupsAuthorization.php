@@ -28,11 +28,23 @@ class GroupsAuthorization {
 	}
 
 	public function isUserInAnyGroup(User $user) {
-		return $this->isUserInAnyGroupInGroupArray($user, $this->groupEmailAddresses);
+		return $this->isUserInAnyProvidedGroup($user, $this->groupEmailAddresses);
 	}
 
-	public function isUserInGroup(User $user, $group) {
-		return $this->isUserInAnyGroupInGroupArray($user, array($group));
+	public function isUserInProvidedGroup(User $user, $group) {
+		return $this->isUserInAnyProvidedGroup($user, array($group));
+	}
+
+	public function isUserInAnyProvidedGroup(User $user, array $groupEmailAddresses) {
+		$userGroups = $this->getGroupsEmailAddressesForUser($user->getEmail());
+		$commonGroups = array_intersect($userGroups, $groupEmailAddresses);
+		return !empty($commonGroups);
+	}
+
+	public function isUserInAllProvidedGroups(User $user, array $groupEmailAddresses) {
+		$userGroups = $this->getGroupsEmailAddressesForUser($user->getEmail());
+		$commonGroups = array_intersect($userGroups, $groupEmailAddresses);
+		return count($groupEmailAddresses) === count($commonGroups);
 	}
 
 	public function getAllGroupsSummary() {
@@ -65,13 +77,6 @@ class GroupsAuthorization {
 
 		return $groupEmails;
 	}
-
-	protected function isUserInAnyGroupInGroupArray(User $user, array $groupEmailAddresses) {
-		$userGroups = $this->getGroupsEmailAddressesForUser($user->getEmail());
-		$commonGroups = array_intersect($userGroups, $groupEmailAddresses);
-		return !empty($commonGroups);
-	}
-
 
 	protected $authentication;
 	protected $groupEmailAddresses;
