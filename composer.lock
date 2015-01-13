@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "8691491a300143140748e177233356bf",
+    "hash": "4d047d083a6eeb0418d6198559534653",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -84,26 +85,28 @@
         },
         {
             "name": "gmo/common",
-            "version": "v1.24.9",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:gmodev/common-library.git",
-                "reference": "3ac279d7c7cca8fe67ce89f26d1618cc91477989"
+                "reference": "2beb6382136542f761254827ed990194b82047db"
             },
             "dist": {
                 "type": "zip",
-                "url": "http://composer.gmodev.com/dist/gmo-common-v1.24.9-7bc4ac.zip",
-                "reference": "3ac279d7c7cca8fe67ce89f26d1618cc91477989",
-                "shasum": "40be9ab92288fe33d068093513108cefb31b1c14"
+                "url": "http://composer.gmodev.com/dist/gmo-common-v1.25.0-c9a923.zip",
+                "reference": "2beb6382136542f761254827ed990194b82047db",
+                "shasum": "7d75305ee7b6503cfa9e14d3ff076b2462dc01a9"
             },
             "require": {
+                "firebase/php-jwt": "~1.0",
+                "symfony/http-foundation": "~2.6",
                 "symfony/yaml": "~2.5"
             },
             "require-dev": {
                 "monolog/monolog": "~1.6",
                 "phpunit/phpunit": "3.7.*",
                 "psr/log": "1.0.0",
-                "silex/silex": "~1.0",
+                "silex/silex": "1.2.*@dev",
                 "twig/twig": "~1.8"
             },
             "suggest": {
@@ -124,8 +127,13 @@
                     "GMO\\TestHelper\\": "TestHelper/"
                 }
             },
+            "autoload-dev": {
+                "psr-4": {
+                    "": "tests/"
+                }
+            },
             "description": "A library for common code",
-            "time": "2015-01-09 22:47:42"
+            "time": "2015-01-13 20:15:15"
         },
         {
             "name": "google/apiclient",
@@ -807,6 +815,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }

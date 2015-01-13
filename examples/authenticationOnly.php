@@ -1,18 +1,19 @@
 <?php
 use GMO\GoogleAuth\Authentication;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-use GMO\GoogleAuth\SessionStorageHandler\JwtCookie;
+use GMO\Common\Session\JwtCookieSessionStorage;
+use GMO\Common\Session\AutoSavingAttributeBag;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $config = json_decode(file_get_contents(__DIR__ . '/config.json'), true);
 
-$sessionStorage = new NativeSessionStorage(array(), new JwtCookie(
+$sessionStorage = new JwtCookieSessionStorage(
 	$config['jwt']['cookieName'],
 	$config['jwt']['secret']
-));
-$session = new Session($sessionStorage);
+);
+$attributeBag = new AutoSavingAttributeBag($sessionStorage);
+$session = new Session($sessionStorage, $attributeBag);
 $authentication = new Authentication(
 	$session,
 	$config['oAuth']['clientId'],
