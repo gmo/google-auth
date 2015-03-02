@@ -29,7 +29,9 @@ class Authentication {
 
 		$this->userClient = new Google_Client($config);
 		$this->userClient->setScopes(static::EMAIL_SCOPE);
+	}
 
+	public function authenticate() {
 		$this->checkForUserLoginAttempt();
 		$this->setAccessTokenIfUserIsLoggedIn();
 	}
