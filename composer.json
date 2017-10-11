@@ -3,7 +3,7 @@
 	"description": "A library for managing Authorization and Authentication using Google services",
 	"require": {
 		"google/apiclient": "~1.1",
-		"symfony/http-foundation": "~2.6"
+		"symfony/http-foundation": "^2.6 || ^3.0"
 	},
 	"require-dev": {
 		"gmo/dependency-injection": "~1.0",
